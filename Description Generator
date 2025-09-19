@@ -1,0 +1,56 @@
+import random
+import csv
+
+# --- SETTINGS ---
+templates = [
+    "Introducing our {name}, crafted with {material} for {audience}. Perfect for {use_case}, it features {feature}.",
+    "Experience the {name}, designed with {material} and tailored for {audience}. Ideal for {use_case}, with benefits like {feature}.",
+    "Upgrade your lifestyle with the {name}. Built using {material}, it’s made for {audience} who want {feature} while enjoying {use_case}.",
+]
+
+# Example product data (could also load from CSV/JSON/DB)
+products = [
+    {
+        "name": "Eco-Friendly Water Bottle",
+        "material": "BPA-free stainless steel",
+        "audience": "health-conscious individuals",
+        "use_case": "staying hydrated on the go",
+        "feature": "keeps drinks cold for 24 hours",
+    },
+    {
+        "name": "Wireless Headphones",
+        "material": "lightweight plastic and soft ear cushions",
+        "audience": "music lovers and gamers",
+        "use_case": "listening to music or gaming sessions",
+        "feature": "crystal-clear sound and long battery life",
+    },
+]
+
+def generate_description(product, template_list=templates):
+    """Generate description for a product using a random template."""
+    template = random.choice(template_list)
+    return template.format(**product)
+
+def generate_all(products):
+    """Generate descriptions for all products."""
+    results = []
+    for product in products:
+        desc = generate_description(product)
+        results.append({"name": product["name"], "description": desc})
+    return results
+
+def export_to_csv(results, filename="product_descriptions.csv"):
+    """Save results to CSV."""
+    with open(filename, "w", newline="", encoding="utf-8") as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=["name", "description"])
+        writer.writeheader()
+        writer.writerows(results)
+    print(f"✅ Descriptions saved to {filename}")
+
+
+# --- RUN ---
+if __name__ == "__main__":
+    generated = generate_all(products)
+    for g in generated:
+        print(f"\n📦 {g['name']}:\n{g['description']}")
+    export_to_csv(generated)
